@@ -1,4 +1,3 @@
-```javascript
 document.addEventListener("DOMContentLoaded", function () {
   const cake = document.querySelector(".cake");
   const candleCountDisplay = document.getElementById("candleCount");
@@ -8,9 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let microphone;
 
   function updateCandleCount() {
-    const activeCandles = candles.filter(
-      (candle) => !candle.classList.contains("out")
-    ).length;
+    const activeCandles = candles.filter(c => !c.classList.contains("out")).length;
     candleCountDisplay.textContent = activeCandles;
   }
 
@@ -40,59 +37,40 @@ document.addEventListener("DOMContentLoaded", function () {
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(dataArray);
-
     let sum = 0;
-    for (let i = 0; i < bufferLength; i++) {
-      sum += dataArray[i];
-    }
-    let average = sum / bufferLength;
-
-    return average > 40; //
+    for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
+    return sum / bufferLength > 40;
   }
 
   function blowOutCandles() {
-    let blownOut = 0;
-
     if (isBlowing()) {
-      candles.forEach((candle) => {
-        if (!candle.classList.contains("out") && Math.random() > 0.5) {
-          candle.classList.add("out");
-          blownOut++;
-        }
+      candles.forEach(c => {
+        if (!c.classList.contains("out") && Math.random() > 0.5) c.classList.add("out");
       });
-    }
-
-    if (blownOut > 0) {
       updateCandleCount();
     }
   }
 
   if (navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(function (stream) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         microphone = audioContext.createMediaStreamSource(stream);
         microphone.connect(analyser);
         analyser.fftSize = 256;
         setInterval(blowOutCandles, 200);
-      })
-      .catch(function (err) {
-        console.log("Unable to access microphone: " + err);
-      });
-  } else {
-    console.log("getUserMedia not supported on your browser!");
-  }
+      }).catch(err => console.log("Unable to access microphone: " + err));
+  } else console.log("getUserMedia not supported!");
 
-  // 🎂 Add 21 candles automatically when page loads
+  // 🎂 Thêm 21 nến ngay khi load trang
   for (let i = 0; i < 21; i++) {
-    const left = 20 + (i % 7) * 40;  // 7 candles per row
-    const top = 30 + Math.floor(i / 7) * 50; // row spacing
+    const left = 20 + (i % 7) * 30;  // 7 nến mỗi hàng
+    const top = 20 + Math.floor(i / 7) * 40; // 3 hàng
     addCandle(left, top);
   }
 
-  // 🎉 Add birthday message
+  // 🎉 Thêm thông điệp sinh nhật
   const message = document.createElement("h2");
   message.textContent = "Chúc mừng sinh nhật tình yêu 21 tuổi";
   message.style.textAlign = "center";
@@ -100,7 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
   message.style.marginTop = "20px";
   message.style.fontFamily = "cursive";
   message.style.fontSize = "28px";
-
   document.body.insertBefore(message, cake);
+
+  // Hiển thị số nến mặc định 21
+  candleCountDisplay.textContent = 21;
 });
-```
