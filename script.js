@@ -1,3 +1,4 @@
+```javascript
 document.addEventListener("DOMContentLoaded", function () {
   const cake = document.querySelector(".cake");
   const candleCountDisplay = document.getElementById("candleCount");
@@ -83,4 +84,23 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     console.log("getUserMedia not supported on your browser!");
   }
+
+  // 🎂 Add 21 candles automatically when page loads
+  for (let i = 0; i < 21; i++) {
+    const left = 20 + (i % 7) * 40;  // 7 candles per row
+    const top = 30 + Math.floor(i / 7) * 50; // row spacing
+    addCandle(left, top);
+  }
+
+  // 🎉 Add birthday message
+  const message = document.createElement("h2");
+  message.textContent = "Chúc mừng sinh nhật tình yêu 21 tuổi";
+  message.style.textAlign = "center";
+  message.style.color = "deeppink";
+  message.style.marginTop = "20px";
+  message.style.fontFamily = "cursive";
+  message.style.fontSize = "28px";
+
+  document.body.insertBefore(message, cake);
 });
+```
